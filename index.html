@@ -153,7 +153,6 @@
 
     <script>
 
-        var notifStatus = window.Notification && Notification.permission;
         var btnEnable = document.getElementById('btn1');
         var statusEl = document.getElementById('status');
 
@@ -173,8 +172,8 @@
 
         // get permission Promise
         function getPermission () {
-            return new Promise(function(resolve, reject){
-                Notification.requestPermission(function(status){
+            return new Promise((resolve, reject) => {
+                Notification.requestPermission(status => {
                     updateStatus(status);
                     if (status == 'granted') {
                         resolve();
@@ -200,18 +199,20 @@
         });
 
         // this other button shows a notification, instantly
-        document.getElementById('btn2').addEventListener('click', function () {
-            // as always, we get the permission
-            getPermission()
-                .then(function(){
-                    var n = new Notification("Hello!", {
-                        body: "Este é o conteúdo desta mensagem!\nPode ter mais de uma linha",
-                        icon: './felipenmoura.jpg' // optional
+        document.querySelector('#btn2')
+            .addEventListener('click', function () {
+                // as always, we get the permission
+                getPermission()
+                    .then(function(){
+                        var n = new Notification("Hello!", {
+                            body: "Corpo\nda mensagem",
+                            icon: './felipenmoura.jpg' // optional
+                        });
+                    }).catch(function(status){
+                        console.log('Had no permission!');
                     });
-                }).catch(function(status){
-                    console.log('Had no permission or support to notify!');
-                });
-        });
+            }
+        );
 
         // this button shows a message after 2 seconds
         document.getElementById('btn3').addEventListener('click', function () {
